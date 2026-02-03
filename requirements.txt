@@ -6,5 +6,5 @@
 Adafruit-Blinka
 adafruit-circuitpython-busdevice
 adafruit-circuitpython-register
-adafruit_pcf8563
-adafruit_portalbase
+adafruit-circuitpython-pcf8563
+adafruit-circuitpython-portalbase
