@@ -105,7 +105,7 @@ Usage Example
     title_index = yoto.add_text(
         text="Hello World!",
         text_position=(yoto.display.width // 2, yoto.display.height // 2),
-        text_color=CYAN,
+        text_color=0xFFFFFF,
         text_scale=3,
         text_anchor_point=(0.5, 0.5),
         is_data=False
