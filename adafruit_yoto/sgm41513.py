@@ -61,7 +61,8 @@ class SGM41513:
         """Current system status
 
         :return: Dictionary with VBUS status, charge status,
-        power good, thermal regulation, and VSYS regulation
+                 power good, thermal regulation, and VSYS regulation
+
         :rtype: dict
         """
         vbus_stat = self._vbus_stat
