@@ -15,21 +15,20 @@ Helper library for the Yoto Mini music player running CircuitPython
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_YotoPlayer.git"
 
-from adafruit_yoto.yoto import Yoto
-from adafruit_yoto.peripherals import Peripherals
-from adafruit_yoto.graphics import Graphics
-from adafruit_yoto.network import Network
-
 from adafruit_yoto.cr95hf import CR95HF
 from adafruit_yoto.es8156 import ES8156
+from adafruit_yoto.graphics import Graphics
+from adafruit_yoto.network import Network
+from adafruit_yoto.peripherals import Peripherals
 from adafruit_yoto.sgm41513 import SGM41513
+from adafruit_yoto.yoto import Yoto
 
 __all__ = [
-    'Yoto',
-    'Peripherals',
-    'Graphics',
-    'Network',
-    'CR95HF',
-    'ES8156',
-    'SGM41513',
+    "Yoto",
+    "Peripherals",
+    "Graphics",
+    "Network",
+    "CR95HF",
+    "ES8156",
+    "SGM41513",
 ]

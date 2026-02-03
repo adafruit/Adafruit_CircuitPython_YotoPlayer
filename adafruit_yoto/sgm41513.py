@@ -14,7 +14,7 @@ CircuitPython driver for SGM41513 Battery Charger IC
 
 from adafruit_bus_device.i2c_device import I2CDevice
 from adafruit_register.i2c_bit import RWBit
-from adafruit_register.i2c_bits import RWBits, ROBits
+from adafruit_register.i2c_bits import ROBits, RWBits
 from micropython import const
 
 _DEFAULT_ADDRESS = const(0x1A)
@@ -28,7 +28,7 @@ _PART_INFO = const(0x0B)
 
 class SGM41513:
     """Driver for SGM41513 Battery Charger IC"""
-    
+
     hiz_mode = RWBit(_INPUT_SOURCE, 7)
     """Enable HIZ mode (disconnect VBUS from internal circuit)"""
     charge_enabled = RWBit(_POWER_ON_CONFIG, 4)
@@ -40,52 +40,42 @@ class SGM41513:
     _pg_stat = ROBits(1, _SYSTEM_STATUS, 2)
     _pn = ROBits(4, _PART_INFO, 3)
     _dev_rev = ROBits(2, _PART_INFO, 0)
-    
+
     def __init__(self, i2c, address=_DEFAULT_ADDRESS):
         self.i2c_device = I2CDevice(i2c, address)
-    
+
     @property
     def part_info(self):
         """Part number and revision information
-        
+
         :return: Dictionary with part_number and revision
         :rtype: dict
         """
         pn = self._pn
         rev = self._dev_rev
-        part_names = {
-            0b0000: "SGM41513",
-            0b0001: "SGM41513A/SGM41513D"
-        }
-        return {
-            "part_number": part_names.get(pn, f"Unknown (0x{pn:X})"),
-            "revision": rev
-        }
-    
+        part_names = {0b0000: "SGM41513", 0b0001: "SGM41513A/SGM41513D"}
+        return {"part_number": part_names.get(pn, f"Unknown (0x{pn:X})"), "revision": rev}
+
     @property
     def system_status(self):
         """Current system status
-        
-        :return: Dictionary with VBUS status, charge status, power good, thermal regulation, and VSYS regulation
+
+        :return: Dictionary with VBUS status, charge status,
+        power good, thermal regulation, and VSYS regulation
         :rtype: dict
         """
         vbus_stat = self._vbus_stat
         chrg_stat = self._chrg_stat
-        
+
         vbus_names = {
             0b000: "No Input",
             0b001: "USB SDP",
             0b010: "Adapter",
             0b011: "USB CDP",
         }
-        
-        chrg_names = {
-            0b00: "Disabled",
-            0b01: "Pre-charge",
-            0b10: "Fast Charge",
-            0b11: "Complete"
-        }
-        
+
+        chrg_names = {0b00: "Disabled", 0b01: "Pre-charge", 0b10: "Fast Charge", 0b11: "Complete"}
+
         return {
             "vbus_status": vbus_names.get(vbus_stat, f"Unknown"),
             "vbus_stat_code": vbus_stat,
@@ -93,11 +83,11 @@ class SGM41513:
             "charge_stat_code": chrg_stat,
             "power_good": bool(self._pg_stat),
         }
-    
+
     @property
     def charge_current(self):
         """Charge current setting in mA
-        
+
         :return: Charge current in milliamps
         :rtype: int
         """
@@ -111,11 +101,11 @@ class SGM41513:
             return 540 + (code - 0x20) * 60
         else:
             return min(1500 + (code - 0x30) * 120, 3000)
-    
+
     @property
     def charge_voltage(self):
         """Charge voltage setting in mV
-        
+
         :return: Charge voltage in millivolts
         :rtype: int
         """

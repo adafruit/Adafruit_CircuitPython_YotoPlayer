@@ -28,7 +28,9 @@ Implementation Notes
 """
 
 import gc
+
 from adafruit_portalbase import PortalBase
+
 from adafruit_yoto.graphics import Graphics
 from adafruit_yoto.network import Network
 from adafruit_yoto.peripherals import Peripherals
@@ -39,7 +41,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_YotoPlayer.git"
 
 class Yoto(PortalBase):
     """Class representing the Yoto Mini music player
-    
+
     :param url: The URL of your data source. Defaults to ``None``.
     :param headers: The headers for authentication, typically used by Azure API's.
     :param json_path: The list of json traversal to get data out of. Can be list of lists for
@@ -57,7 +59,7 @@ class Yoto(PortalBase):
     :param debug: Turn on debug print outs. Defaults to False.
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         *,
         url=None,

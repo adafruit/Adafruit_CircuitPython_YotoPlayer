@@ -120,7 +120,7 @@ Usage Example
         print(f"Battery: {part['part_number']}")
     if yoto.peripherals.rtc:
         print(f"RTC: {'Valid' if yoto.peripherals.rtc_valid else 'Needs Set'}")
-    
+
     while True:
         pass
 

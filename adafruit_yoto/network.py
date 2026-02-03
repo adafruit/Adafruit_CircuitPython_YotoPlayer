@@ -58,7 +58,7 @@ class Network(NetworkBase):
                 status_led = neopixel.NeoPixel(status_neopixel, 1, brightness=0.2)
         else:
             status_led = None
-        
+
         super().__init__(
             WiFi(status_led=status_led),
             extract_values=extract_values,

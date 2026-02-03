@@ -27,6 +27,7 @@ Implementation Notes
 """
 
 import gc
+
 import board
 from adafruit_portalbase.graphics import GraphicsBase
 
@@ -36,7 +37,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_YotoPlayer.git"
 
 class Graphics(GraphicsBase):
     """Graphics Helper Class for the Yoto Mini Library
-    
+
     :param default_bg: The path to your default background image file or a hex color.
                        Defaults to 0x000000.
     :param int rotation: Default rotation (0, 90, 180, 270). Defaults to 0.
@@ -50,10 +51,10 @@ class Graphics(GraphicsBase):
         self.display.rotation = rotation
         self.auto_refresh = auto_refresh
         self.display.auto_refresh = auto_refresh
-        
+
         super().__init__(board.DISPLAY, default_bg=default_bg, debug=debug)
         gc.collect()
-    
+
     def refresh(self):
         """Manually refresh the display"""
         self.display.refresh()
