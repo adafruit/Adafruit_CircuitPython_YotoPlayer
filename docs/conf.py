@@ -30,6 +30,13 @@ autodoc_mock_imports = [
     "busio",
     "audiobusio",
     "rotaryio",
+    "supervisor",
+    "rtc",
+    "ssl",
+    "wifi",
+    "socketpool",
+    "analogio",
+    "bitmaptools",
 ]
 
 autodoc_preserve_defaults = True
