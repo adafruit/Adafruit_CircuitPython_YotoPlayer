@@ -31,7 +31,7 @@ import board
 from adafruit_portalbase.graphics import GraphicsBase
 
 __version__ = "0.0.0+auto.0"
-__repo__ = "https://github.com/yourrepo/Adafruit_CircuitPython_Yoto.git"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_YotoPlayer.git"
 
 
 class Graphics(GraphicsBase):

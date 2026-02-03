@@ -31,7 +31,7 @@ from adafruit_portalbase.network import NetworkBase
 from adafruit_portalbase.wifi_esp32s2 import WiFi
 
 __version__ = "0.0.0+auto.0"
-__repo__ = "https://github.com/yourrepo/Adafruit_CircuitPython_Yoto.git"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_YotoPlayer.git"
 
 
 class Network(NetworkBase):

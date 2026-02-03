@@ -37,7 +37,7 @@ from adafruit_yoto.sgm41513 import SGM41513
 from adafruit_pcf8563.pcf8563 import PCF8563
 
 __version__ = "0.0.0+auto.0"
-__repo__ = "https://github.com/yourrepo/Adafruit_CircuitPython_Yoto.git"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_YotoPlayer.git"
 
 
 class Peripherals:

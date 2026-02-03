@@ -23,7 +23,6 @@ Introduction
 
 PortalBase helper library for the Yoto Players
 
-
 Dependencies
 =============
 This driver depends on:
@@ -31,6 +30,8 @@ This driver depends on:
 * `Adafruit CircuitPython <https://github.com/adafruit/circuitpython>`_
 * `Bus Device <https://github.com/adafruit/Adafruit_CircuitPython_BusDevice>`_
 * `Register <https://github.com/adafruit/Adafruit_CircuitPython_Register>`_
+* `PortalBase <https://github.com/adafruit/Adafruit_CircuitPython_PortalBase>`_
+* `PCF8563 <https://github.com/adafruit/Adafruit_CircuitPython_PCF8563>`_
 
 Please ensure all dependencies are available on the CircuitPython filesystem.
 This is easily achieved by downloading
@@ -38,19 +39,8 @@ This is easily achieved by downloading
 or individual libraries can be installed using
 `circup <https://github.com/adafruit/circup>`_.
 
-
-
-.. todo:: Describe the Adafruit product this library works with. For PCBs, you can also add the
-image from the assets folder in the PCB's GitHub repo.
-
-`Purchase one from the Adafruit shop <http://www.adafruit.com/products/>`_
-
 Installing from PyPI
 =====================
-.. note:: This library is not available on PyPI yet. Install documentation is included
-   as a standard element. Stay tuned for PyPI availability!
-
-.. todo:: Remove the above note if PyPI version is/will be available at time of release.
 
 On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally `from
 PyPI <https://pypi.org/project/adafruit-circuitpython-yotoplayer/>`_.
@@ -101,8 +91,38 @@ Or the following command to update an existing version:
 Usage Example
 =============
 
-.. todo:: Add a quick, simple example. It and other examples should live in the
-examples folder and be included in docs/examples.rst.
+.. code-block:: python
+
+    from adafruit_yoto import Yoto
+
+    yoto = Yoto(
+    default_bg=0x000000,
+    rotation=0,
+    debug=False,
+    auto_refresh=True,
+    )
+
+    title_index = yoto.add_text(
+        text="Hello World!",
+        text_position=(yoto.display.width // 2, yoto.display.height // 2),
+        text_color=CYAN,
+        text_scale=3,
+        text_anchor_point=(0.5, 0.5),
+        is_data=False
+    )
+
+    if yoto.peripherals.nfc:
+        print(f"NFC: {yoto.peripherals.nfc.device_name}")
+    if yoto.peripherals.dac:
+        print(f"DAC: ES8156 (Chip ID: {yoto.peripherals.dac.chip_id:04X})")
+    if yoto.peripherals.battery:
+        part = yoto.peripherals.battery.part_info
+        print(f"Battery: {part['part_number']}")
+    if yoto.peripherals.rtc:
+        print(f"RTC: {'Valid' if yoto.peripherals.rtc_valid else 'Needs Set'}")
+    
+    while True:
+        pass
 
 Documentation
 =============

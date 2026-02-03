@@ -34,7 +34,7 @@ from adafruit_yoto.network import Network
 from adafruit_yoto.peripherals import Peripherals
 
 __version__ = "0.0.0+auto.0"
-__repo__ = "https://github.com/yourrepo/Adafruit_CircuitPython_Yoto.git"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_YotoPlayer.git"
 
 
 class Yoto(PortalBase):

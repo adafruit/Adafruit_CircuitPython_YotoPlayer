@@ -13,7 +13,7 @@ Helper library for the Yoto Mini music player running CircuitPython
 """
 
 __version__ = "0.0.0+auto.0"
-__repo__ = "https://github.com/yourrepo/Adafruit_CircuitPython_Yoto.git"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_YotoPlayer.git"
 
 from adafruit_yoto.yoto import Yoto
 from adafruit_yoto.peripherals import Peripherals
