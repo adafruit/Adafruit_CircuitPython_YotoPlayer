@@ -6,10 +6,10 @@
 from adafruit_yoto import Yoto
 
 yoto = Yoto(
-default_bg="/sd/blinka240x240.bmp",
-rotation=0,
-debug=False,
-auto_refresh=False,
+    default_bg="/sd/blinka240x240.bmp",
+    rotation=0,
+    debug=False,
+    auto_refresh=False,
 )
 yoto.graphics.refresh()
 

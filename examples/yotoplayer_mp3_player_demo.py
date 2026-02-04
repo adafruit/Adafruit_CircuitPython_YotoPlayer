@@ -2,25 +2,27 @@
 #
 # SPDX-License-Identifier: MIT
 """MP3 Player Demo
-    * Put your albums into folders in the /sd directory
-    ex: /sd/Yellow Submarine
-    * For the album cover art, make a 240x240 bitmap
-    * Name the bitmap cover.bmp and put it in the album folder
-    ex: /sd/Yellow Submarine/cover.bmp
-    
-    Left knob controls volume
-    Right knob changes tracks
-    Headphone audio output"""
+* Put your albums into folders in the /sd directory
+ex: /sd/Yellow Submarine
+* For the album cover art, make a 240x240 bitmap
+* Name the bitmap cover.bmp and put it in the album folder
+ex: /sd/Yellow Submarine/cover.bmp
+
+Left knob controls volume
+Right knob changes tracks
+Headphone audio output"""
 
 import os
+
 import audiomp3
+
 from adafruit_yoto import Yoto
 
 yoto = Yoto(
-default_bg=0xFF00FF,
-rotation=0,
-debug=False,
-auto_refresh=False,
+    default_bg=0xFF00FF,
+    rotation=0,
+    debug=False,
+    auto_refresh=False,
 )
 yoto.graphics.refresh()
 
@@ -67,7 +69,9 @@ while True:
                 current_right_knob = yoto.peripherals.encoder_right_position
                 if last_left_knob != current_left_knob:
                     print("left", last_left_knob, current_left_knob)
-                    dac.volume = max(0, min(180, dac.volume + 10 * (current_left_knob - last_left_knob)))
+                    dac.volume = max(
+                        0, min(180, dac.volume + 10 * (current_left_knob - last_left_knob))
+                    )
                     print("volume", dac.volume)
                     last_left_knob = current_left_knob
                 if last_right_knob != current_right_knob:
