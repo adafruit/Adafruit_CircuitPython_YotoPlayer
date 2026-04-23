@@ -77,8 +77,7 @@ while True:
                 if last_right_knob != current_right_knob:
                     print("right", last_right_knob, current_right_knob)
                     track += current_right_knob - last_right_knob - 1
-                    if track < 0:
-                        track = 0
+                    track = max(track, 0)
                     last_right_knob = current_right_knob
                     print("next", track)
                     audio.stop()
