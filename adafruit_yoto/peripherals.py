@@ -87,26 +87,19 @@ class Peripherals:  # noqa: PLR0904
                 board.I2S_BCLK, board.I2S_WORD_SELECT, board.I2S_DOUT, main_clock=board.I2S_MCLK
             )
 
-            # playing a single 0 to start I2C BCLK - amp needs it running *before* being turned on
-            self._dac.play_silence(self._audio)
-
             self._dac.volume = 150
             self._dac.mute = False
         except Exception as e:
             print(f"Warning: Audio initialization failed: {e}")
 
-        try:
-            if self._level_converter is not None:
-                self._level_converter.value = True
-            if self._pactrl is not None:
-                self._pactrl.value = True
-            time.sleep(0.5)
-            self._amp = AW88194(self._i2c, address=0x34)
-            self._amp.configure()
-            self._amp.enable()
-            self.headphone_detect()
-        except Exception as e:
-            print(f"Warning: Amplifier initialization failed: {e}")
+        if self._dac is not None:
+            # playing a single 0 to start I2C BCLK - amp needs it running *before* being turned on
+            self._dac.play_silence(self._audio)
+
+            try:
+                self.init_amp()
+            except Exception as e:
+                print(f"Warning: Amplifier initialization failed: {e}")
 
         # Initialize battery charger
         self._battery = None
@@ -136,6 +129,17 @@ class Peripherals:  # noqa: PLR0904
             self._encoder_right_last_position = self._encoder_right.position
         except Exception as e:
             print(f"Warning: Encoder initialization failed: {e}")
+
+    def init_amp(self):
+        if self._level_converter is not None:
+            self._level_converter.value = True
+        if self._pactrl is not None:
+            self._pactrl.value = True
+        time.sleep(0.5)
+        self._amp = AW88194(self._i2c, address=0x34)
+        self._amp.configure()
+        self._amp.enable()
+        self.headphone_detect()
 
     def _init_control_pins(self):
         """Initialize IOExpander control pins"""
@@ -340,8 +344,10 @@ class Peripherals:  # noqa: PLR0904
     def headphone_detect(self):
         """Headphone jack detection pin state.
         If the amplifier is active and headphones are detected, the amp will be muted.
-        The detection state is cached, so the mute setting does not get written unless the state changes.
-        The value for the headphone detect is also flipped, so headphone_detect.value is True when nothing is plugged in
+        The detection state is cached, so the mute setting does not get written
+         unless the state changes.
+        The value for the headphone detect is also flipped, so headphone_detect.value is True
+         when nothing is plugged in
         """
         if self._headphone_detect is None:
             return None
