@@ -115,6 +115,8 @@ Usage Example
         print(f"NFC: {yoto.peripherals.nfc.device_name}")
     if yoto.peripherals.dac:
         print(f"DAC: ES8156 (Chip ID: {yoto.peripherals.dac.chip_id:04X})")
+    if yoto.peripherals.amp:
+        print(f"Amp: AW88194 (Chip ID: {yoto.peripherals.amp.chip_id:04X})")
     if yoto.peripherals.battery:
         part = yoto.peripherals.battery.part_info
         print(f"Battery: {part['part_number']}")

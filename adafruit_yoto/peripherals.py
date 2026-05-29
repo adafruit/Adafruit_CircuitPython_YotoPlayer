@@ -34,6 +34,7 @@ import busio
 import rotaryio
 from adafruit_pcf8563.pcf8563 import PCF8563
 
+from adafruit_yoto.aw88194 import AW88194
 from adafruit_yoto.cr95hf import CR95HF
 from adafruit_yoto.es8156 import ES8156
 from adafruit_yoto.sgm41513 import SGM41513
@@ -48,6 +49,7 @@ class Peripherals:  # noqa: PLR0904
     Provides access to:
     - NFC/RFID reader (CR95HF)
     - I2S DAC (ES8156) and audio playback
+    - AW88194 speaker amplifier
     - Battery charger (SGM41513)
     - RTC (PCF8563)
     - Two rotary encoders with buttons
@@ -73,9 +75,10 @@ class Peripherals:  # noqa: PLR0904
         except Exception as e:
             print(f"Warning: NFC initialization failed: {e}")
 
-        # Initialize audio DAC and I2S
+        # Initialize audio DAC, speaker amp, and I2S
         self._audio = None
         self._dac = None
+        self._amp: None
         try:
             self._dac = ES8156(self._i2c, address=0x08)
             self._dac.configure(use_sclk_as_mclk=False)
@@ -88,6 +91,15 @@ class Peripherals:  # noqa: PLR0904
             self._dac.mute = False
         except Exception as e:
             print(f"Warning: Audio initialization failed: {e}")
+
+        if self._dac is not None:
+            # playing a single 0 to start I2C BCLK - amp needs it running *before* being turned on
+            self._dac.play_silence(self._audio)
+
+            try:
+                self.init_amp()
+            except Exception as e:
+                print(f"Warning: Amplifier initialization failed: {e}")
 
         # Initialize battery charger
         self._battery = None
@@ -118,6 +130,17 @@ class Peripherals:  # noqa: PLR0904
         except Exception as e:
             print(f"Warning: Encoder initialization failed: {e}")
 
+    def init_amp(self):
+        if self._level_converter is not None:
+            self._level_converter.value = True
+        if self._pactrl is not None:
+            self._pactrl.value = True
+        time.sleep(0.5)
+        self._amp = AW88194(self._i2c, address=0x34)
+        self._amp.configure()
+        self._amp.enable()
+        self.headphone_detect()
+
     def _init_control_pins(self):
         """Initialize IOExpander control pins"""
         self._pactrl = board.PACTRL
@@ -125,6 +148,7 @@ class Peripherals:  # noqa: PLR0904
         self._level_power_enable = board.LEVEL_POWER_ENABLE
         self._level_vinhold = board.LEVEL_VINHOLD
         self._headphone_detect = board.HEADPHONE_DETECT
+        self._headphone_detect_cache = None
         self._plug_status = board.PLUG_STATUS
         self._charge_status_pin = board.CHARGE_STATUS
         self._power_button = board.POWER_BUTTON
@@ -166,6 +190,11 @@ class Peripherals:  # noqa: PLR0904
     def dac(self):
         """Access the ES8156 DAC directly"""
         return self._dac
+
+    @property
+    def amp(self):
+        """Access the AW88194 speaker amplifier directly"""
+        return self._amp
 
     @property
     def volume(self):
@@ -312,10 +341,21 @@ class Peripherals:  # noqa: PLR0904
         return board.ENC2_BUTTON.value
 
     # IOExpander Pin Properties
-    @property
     def headphone_detect(self):
-        """Headphone jack detection pin state"""
-        return self._headphone_detect.value if self._headphone_detect else None
+        """Headphone jack detection pin state.
+        If the amplifier is active and headphones are detected, the amp will be muted.
+        The detection state is cached, so the mute setting does not get written
+         unless the state changes.
+        The value for the headphone detect is also flipped, so headphone_detect.value is True
+         when nothing is plugged in
+        """
+        if self._headphone_detect is None:
+            return None
+        detected = not self._headphone_detect.value
+        if detected == self._headphone_detect_cache and self._amp is not None:
+            self._amp.mute = detected
+        self._headphone_detect_cache = detected
+        return detected
 
     @property
     def plug_status(self):
@@ -370,6 +410,9 @@ class Peripherals:  # noqa: PLR0904
 
         if self._dac is not None:
             self._dac.mute = True
+
+        if self._amp is not None:
+            self._amp.mute = True
 
         if self._nfc is not None:
             self._nfc.field_off()
