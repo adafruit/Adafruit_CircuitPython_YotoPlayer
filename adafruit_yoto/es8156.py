@@ -12,6 +12,8 @@ CircuitPython driver for the ES8156 I2S DAC
 
 """
 
+import audiocore
+
 from adafruit_bus_device.i2c_device import I2CDevice
 from adafruit_register.i2c_bit import RWBit
 from adafruit_register.i2c_struct import UnaryStruct
@@ -88,6 +90,10 @@ class ES8156:
         self.left_mute = value
         self.right_mute = value
         self._out_mute_bit = value
+
+    def play_silence(self, audio_output):
+        """Play a single zero sample on audio_output"""
+        audio_output.play(audiocore.RawSample(bytes([0, 0]), sample_rate=44100))
 
     def configure(self, use_sclk_as_mclk=False):
         """Configure the ES8156 with default settings for I2S peripheral mode.

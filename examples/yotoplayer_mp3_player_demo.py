@@ -10,7 +10,7 @@ ex: /sd/Yellow Submarine/cover.bmp
 
 Left knob controls volume
 Right knob changes tracks
-Headphone audio output"""
+Headphone + speaker audio output"""
 
 import os
 
@@ -30,6 +30,8 @@ dac = yoto.peripherals.dac
 dac.mute = True
 audio = yoto.peripherals.audio
 dac.volume = 160
+amp = yoto.peripherals.amp
+amp.volume = 40
 
 mp3 = None
 folders = os.listdir("/sd")
@@ -61,10 +63,12 @@ while True:
                 mp3 = audiomp3.MP3Decoder(file)
             else:
                 mp3.open(file)
-            audio.play(mp3)
+
+            yoto.peripherals.headphone_detect()
             dac.mute = False
+            audio.play(mp3)
             while audio.playing:
-                # board.PACTRL.value = not board.HEADPHONE_DETECT.value
+                yoto.peripherals.headphone_detect()
                 current_left_knob = yoto.peripherals.encoder_left_position
                 current_right_knob = yoto.peripherals.encoder_right_position
                 if last_left_knob != current_left_knob:
@@ -72,7 +76,10 @@ while True:
                     dac.volume = max(
                         0, min(180, dac.volume + 10 * (current_left_knob - last_left_knob))
                     )
-                    print("volume", dac.volume)
+                    amp.volume = max(
+                        0, min(90, amp.volume - 10 * (current_left_knob - last_left_knob))
+                    )
+                    print("dac", dac.volume, "amp", amp.volume)
                     last_left_knob = current_left_knob
                 if last_right_knob != current_right_knob:
                     print("right", last_right_knob, current_right_knob)

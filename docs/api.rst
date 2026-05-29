@@ -7,6 +7,9 @@
 API Reference
 #############
 
+.. automodule:: adafruit_yoto.aw88194
+    :members:
+
 .. automodule:: adafruit_yoto.cr95hf
     :members:
 
